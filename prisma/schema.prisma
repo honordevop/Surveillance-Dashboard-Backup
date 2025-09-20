@@ -1,0 +1,125 @@
+// prisma/schema.prisma
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL") // pooled (pgBouncer) for app runtime
+    directUrl = env("DIRECT_URL") // direct for migrations
+}
+
+model IncidentReport {
+    id           String   @id @default(uuid())
+    date         DateTime @db.Date
+    location     String
+    incidentType String
+    details      String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    embedding IncidentEmbedding?
+
+    @@unique([date, location, incidentType], name: "incident_unique")
+}
+
+model IncidentEmbedding {
+    incidentReportId String                      @id
+    incident         IncidentReport              @relation(fields: [incidentReportId], references: [id], onDelete: Cascade)
+    embedding        Unsupported("vector(1536)")
+}
+
+// model IncidentEmbedding {
+//     incidentReportId String                      @id
+//     incident         IncidentReport              @relation(fields: [incidentReportId], references: [id], onDelete: Cascade)
+//     embedding        Unsupported("vector(1536)")
+// }
+
+// ========= Incident Dashboard Models =========
+
+enum SiteCategory {
+    ILLEGAL_CONNECTION
+    ILLEGAL_REFINERY
+    OTHER
+}
+
+model Year {
+    id     Int     @id @default(autoincrement())
+    year   Int     @unique
+    months Month[]
+}
+
+model Month {
+    id     Int  @id @default(autoincrement())
+    month  Int // 1..12
+    yearId Int
+    year   Year @relation(fields: [yearId], references: [id], onDelete: Cascade)
+
+    // One-to-one monthly aggregate
+    monthlyIncident MonthlyIncident?
+
+    // Children tied to the month
+    illegalSites    IllegalSite[]
+    burntAssets     BurntAsset[]
+    leakageSites    LeakageSite[]
+    operationImages OperationImage[]
+
+    @@unique([yearId, month]) // Ensure one row per month per year
+}
+
+model MonthlyIncident {
+    id      Int   @id @default(autoincrement())
+    monthId Int   @unique
+    month   Month @relation(fields: [monthId], references: [id], onDelete: Cascade)
+
+    illegalConnections Int @default(0)
+    illegalRefineries  Int @default(0)
+    oilLeaks           Int @default(0)
+    gasLeaks           Int @default(0)
+    arrestsMade        Int @default(0)
+    aversions          Int @default(0)
+
+    litersAGO   Float @default(0)
+    litersPMS   Float @default(0)
+    litersCrude Float @default(0)
+}
+
+model IllegalSite {
+    id       Int          @id @default(autoincrement())
+    monthId  Int
+    month    Month        @relation(fields: [monthId], references: [id], onDelete: Cascade)
+    category SiteCategory
+    location String
+    lat      Float
+    lng      Float
+}
+
+model BurntAsset {
+    id      Int     @id @default(autoincrement())
+    monthId Int
+    month   Month   @relation(fields: [monthId], references: [id], onDelete: Cascade)
+    name    String
+    notes   String?
+}
+
+model LeakageSite {
+    id       Int    @id @default(autoincrement())
+    month    Month  @relation(fields: [monthId], references: [id], onDelete: Cascade)
+    monthId  Int
+    category String // "Oil Leakage" or "Gas Leakage"
+    location String
+    lat      Float
+    lng      Float
+
+    @@map("leakage_sites")
+}
+
+model OperationImage {
+    id        Int      @id @default(autoincrement())
+    monthId   Int
+    month     Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+    path      String // storage object path in the bucket
+    publicUrl String // resolved public URL at upload-time
+    caption   String?
+    createdAt DateTime @default(now())
+}
