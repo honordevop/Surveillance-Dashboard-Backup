@@ -8,11 +8,13 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req) {
   try {
-    const { messages } = await req.json(); 
+    const { messages } = await req.json();
     // messages = [{ role: "user"|"assistant"|"system", content: "..." }, ...]
 
     // 1. Find latest user question
-    const latestMessage = messages.filter(m => m.role === "user").slice(-1)[0];
+    const latestMessage = messages
+      .filter((m) => m.role === "user")
+      .slice(-1)[0];
     const question = latestMessage?.content || "";
 
     // 2. Search embeddings using ONLY the latest question
@@ -22,7 +24,9 @@ export async function POST(req) {
     const context = reports
       .map(
         (r) =>
-          `• On ${r.date} at ${r.location}: ${r.incidentType} — ${r.details || "No extra details provided."}`
+          `• On ${r.date} at ${r.location}: ${r.incidentType} — ${
+            r.details || "No extra details provided."
+          }`
       )
       .join("\n");
 
@@ -38,7 +42,7 @@ You must combine:
 Where multiple context is provided, use the one that most closely alligns and answers the question asked.
 If no context is relevant, respond with a statement that clearly states that no available data answers the question asked.
 Keep answers concise and reference report date/location if possible.
-No fictional response or hallucination. Respond to greetings and compliments accordingly.
+No fictional response or hallucination. Respond to greetings and compliments accordingly.Avoid unnecessary blank lines or extra paragraph breaks. Use compact Markdown.
       `.trim(),
     };
 

@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase-client";
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from "recharts";
+import Forms from "@/component/LoginFormComponent";
+import Image from "next/image";
+import LoginForm from "@/component/LoginForm";
+import Footer from "@/component/Footer";
+import { useGlobalContext } from "@/context/context";
+import { RotatingSquare } from "react-loader-spinner";
 
 export default function HomePage() {
+  const { pageLoading, offPageLoading, mode } = useGlobalContext();
   const [data, setData] = useState([]);
   const [month, setMonth] = useState(() => {
     const d = new Date();
@@ -13,70 +20,51 @@ export default function HomePage() {
   const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f7f", "#7fd3ff"];
 
   useEffect(() => {
-    async function load() {
-      // compute start and end for selected month
-      const [year, mon] = month.split("-");
-      const start = `${year}-${mon}-01`;
-      const endDate = new Date(year, Number(mon), 1);
-      endDate.setMonth(endDate.getMonth() + 1);
-      const end = endDate.toISOString().slice(0, 10);
+    const timer = setTimeout(() => {
+      offPageLoading(); // Call your function here after 5 seconds
+    }, 5000); // 5000ms = 5s
 
-      const { data, error } = await supabase.rpc("incident_counts_monthly", {
-        start_date: start,
-        end_date: end,
-      });
+    return () => clearTimeout(timer); // Cleanup on unmount
+  }, []);
 
-      if (error) {
-        console.log("rpc error", error);
-        return;
-      }
-      const chartData = data.map((r) => ({
-        name: r.incident_type,
-        value: r.cnt,
-      }));
-      setData(chartData);
-    }
-    load();
-  }, [month]);
+  if (pageLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div>
+          {/* <BounceLoader className="" size={80} color="#b52624" /> */}
+          <RotatingSquare
+            visible={true}
+            height="200"
+            width="200"
+            color={mode === "dark" ? "#ffff" : "#4fa94d"}
+            ariaLabel="rotating-square-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Monthly Incident Overview</h1>
-
-      <label>
-        Month:
-        <input
-          type="month"
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-          style={{ marginLeft: 8 }}
-        />
-      </label>
-
-      <div style={{ width: "100%", height: 400 }}>
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={120}
-              fill="#8884d8"
-              label
-            >
-              {data.map((entry, idx) => (
-                <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-              ))}
-            </Pie>
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+    <div className="w-full flex flex-col items-center justify-center h-[92vh] md:h-[86vh] mt-[8vh] md:mt-[14vh]">
+      <div className="w-full flex h-full">
+        <div className="hidden flex-1 w-full h-full md:flex flex-col items-center justify-center">
+          <div className="relative w-full h-full bg-yellowd-50">
+            <Image
+              src="/newguard_sign_up_image.webp"
+              fill
+              priority
+              className="object-cover"
+              alt="sign up image"
+            />
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-scroll scrollWidth0 w-full ">
+          <LoginForm />
+        </div>
       </div>
-
-      <p>
-        Data is read-only via Supabase anon key and the incident_counts_monthly
-        RPC.
-      </p>
+      {/* <Footer /> */}
     </div>
   );
 }

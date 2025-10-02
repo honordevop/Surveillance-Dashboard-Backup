@@ -19,16 +19,25 @@ export default function IncidentMap({ illegalSites = [], leakageSites = [] }) {
     allSites.length > 0 ? [allSites[0].lat, allSites[0].lng] : [6.5244, 3.3792]; // fallback: Lagos coords
 
   return (
-    <div className="h-96 w-full mt-8 z-0">
+    <div className="h-[70vh] w-full mt-8 z-0">
       <MapContainer
         center={center}
         zoom={7}
         scrollWheelZoom
-        className="h-full w-full rounded-lg shadow"
+        className="h-full w-full rounded-lg shadow leaflet-map"
       >
+        {/* Esri Satellite Imagery */}
         <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={null}
+          // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          // url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          // url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        />
+        {/* Esri Reference Layer (Labels) */}
+        <TileLayer
+          url="https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+          attribution={null}
         />
         {illegalSites.map((site, idx) => (
           <Marker key={`illegal-${idx}`} position={[site.lat, site.lng]}>

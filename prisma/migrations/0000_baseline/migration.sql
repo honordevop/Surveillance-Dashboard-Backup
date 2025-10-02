@@ -1,34 +1,29 @@
-/*
-  Warnings:
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
 
-  - The primary key for the `IncidentEmbedding` table will be changed. If it partially fails, the table could be left without primary key constraint.
-  - The primary key for the `IncidentReport` table will be changed. If it partially fails, the table could be left without primary key constraint.
-
-*/
 -- CreateEnum
 CREATE TYPE "public"."SiteCategory" AS ENUM ('ILLEGAL_CONNECTION', 'ILLEGAL_REFINERY', 'OTHER');
 
--- DropForeignKey
-ALTER TABLE "public"."IncidentEmbedding" DROP CONSTRAINT "IncidentEmbedding_incidentReportId_fkey";
+-- CreateTable
+CREATE TABLE "public"."IncidentReport" (
+    "id" TEXT NOT NULL,
+    "date" DATE NOT NULL,
+    "location" TEXT NOT NULL,
+    "incidentType" TEXT NOT NULL,
+    "details" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- DropIndex
-DROP INDEX "public"."incident_embedding_embedding_ivfflat";
+    CONSTRAINT "IncidentReport_pkey" PRIMARY KEY ("id")
+);
 
--- AlterTable
-ALTER TABLE "public"."IncidentEmbedding" DROP CONSTRAINT "IncidentEmbedding_pkey",
-ALTER COLUMN "id" DROP DEFAULT,
-ALTER COLUMN "id" SET DATA TYPE TEXT,
-ALTER COLUMN "incidentReportId" SET DATA TYPE TEXT,
-ADD CONSTRAINT "IncidentEmbedding_pkey" PRIMARY KEY ("id");
+-- CreateTable
+CREATE TABLE "public"."IncidentEmbedding" (
+    "incidentReportId" TEXT NOT NULL,
+    "embedding" vector NOT NULL,
 
--- AlterTable
-ALTER TABLE "public"."IncidentReport" DROP CONSTRAINT "IncidentReport_pkey",
-ALTER COLUMN "id" DROP DEFAULT,
-ALTER COLUMN "id" SET DATA TYPE TEXT,
-ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMP(3),
-ALTER COLUMN "updatedAt" DROP DEFAULT,
-ALTER COLUMN "updatedAt" SET DATA TYPE TIMESTAMP(3),
-ADD CONSTRAINT "IncidentReport_pkey" PRIMARY KEY ("id");
+    CONSTRAINT "IncidentEmbedding_pkey" PRIMARY KEY ("incidentReportId")
+);
 
 -- CreateTable
 CREATE TABLE "public"."Year" (
@@ -86,6 +81,33 @@ CREATE TABLE "public"."BurntAsset" (
     CONSTRAINT "BurntAsset_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."leakage_sites" (
+    "id" SERIAL NOT NULL,
+    "monthId" INTEGER NOT NULL,
+    "category" TEXT NOT NULL,
+    "location" TEXT NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL,
+    "lng" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "leakage_sites_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."OperationImage" (
+    "id" SERIAL NOT NULL,
+    "monthId" INTEGER NOT NULL,
+    "path" TEXT NOT NULL,
+    "publicUrl" TEXT NOT NULL,
+    "caption" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "OperationImage_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "IncidentReport_date_location_incidentType_key" ON "public"."IncidentReport"("date", "location", "incidentType");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Year_year_key" ON "public"."Year"("year");
 
@@ -110,8 +132,9 @@ ALTER TABLE "public"."IllegalSite" ADD CONSTRAINT "IllegalSite_monthId_fkey" FOR
 -- AddForeignKey
 ALTER TABLE "public"."BurntAsset" ADD CONSTRAINT "BurntAsset_monthId_fkey" FOREIGN KEY ("monthId") REFERENCES "public"."Month"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- RenameIndex
-ALTER INDEX "public"."incident_embedding_unique" RENAME TO "IncidentEmbedding_incidentReportId_key";
+-- AddForeignKey
+ALTER TABLE "public"."leakage_sites" ADD CONSTRAINT "leakage_sites_monthId_fkey" FOREIGN KEY ("monthId") REFERENCES "public"."Month"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- RenameIndex
-ALTER INDEX "public"."incident_unique" RENAME TO "IncidentReport_date_location_incidentType_key";
+-- AddForeignKey
+ALTER TABLE "public"."OperationImage" ADD CONSTRAINT "OperationImage_monthId_fkey" FOREIGN KEY ("monthId") REFERENCES "public"."Month"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

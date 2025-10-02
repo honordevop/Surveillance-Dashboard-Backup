@@ -7,7 +7,7 @@ export default function DataTable({ sites, assets }) {
         <div className="p-3 border-b font-medium">Illegal Sites</div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="">
               <tr>
                 <th className="text-left p-2">Category</th>
                 <th className="text-left p-2">Location</th>
@@ -40,7 +40,7 @@ export default function DataTable({ sites, assets }) {
         <div className="p-3 border-b font-medium">Burnt Seized Assets</div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="">
               <tr>
                 <th className="text-left p-2">Name</th>
                 <th className="text-left p-2">Notes</th>
