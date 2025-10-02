@@ -32,7 +32,7 @@ const NavMenu = ({ toggleMenu }) => {
       </div>
       <div className={`h-4/5 overflow-auto  scrollbar-w-2`}>
         <div
-          className="flex flex-col items-center gap-8 md:gap-5 px-2 md:px-5
+          className="flex flex-col items-center gap-8 md:gap-10 px-2 md:px-5
         md:py-6 "
         >
           {links.map((link, i) => (
@@ -48,7 +48,7 @@ const NavMenu = ({ toggleMenu }) => {
             >
               <Link
                 href={link.url}
-                className="text-[20px] md:text-[4rem]"
+                className="text-[20px] md:text-[3rem] w-full"
                 onClick={link.url.includes(currentPage) ? null : onPageLoading}
               >
                 {link.linkName}
@@ -63,7 +63,7 @@ const NavMenu = ({ toggleMenu }) => {
               >
                 <Link
                   href="/"
-                  className="text-[20px] md:text-[4rem]"
+                  className="text-[20px] md:text-[3rem]"
                   onClick={
                     pathname.split("/").pop() === "" ? null : onPageLoading
                   }
@@ -81,7 +81,7 @@ const NavMenu = ({ toggleMenu }) => {
                     signOut();
                     onPageLoading();
                   }}
-                  className="text-[20px] md:text-[4rem] cursor-pointer"
+                  className="text-[20px] md:text-[3rem] cursor-pointer"
                 >
                   Sign Out
                 </div>

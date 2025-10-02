@@ -47,7 +47,11 @@ const Navbar = () => {
         >
           <div className="relative w-[60px] h-[60px] md:w-16 md:h-16">
             <Image
-              src={mode == "dark" ? "/newguard_logo.png" : "/newguard_logo.png"}
+              src={
+                mode == "dark"
+                  ? "/newguard_logo_white.png"
+                  : "/newguard_logo.png"
+              }
               alt="newgurad logo"
               fill={true}
               priority

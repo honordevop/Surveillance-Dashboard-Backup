@@ -34,9 +34,9 @@ export default function HomePage() {
           {/* <BounceLoader className="" size={80} color="#b52624" /> */}
           <RotatingSquare
             visible={true}
-            height="200"
-            width="200"
-            color={mode === "dark" ? "#ffff" : "#4fa94d"}
+            height="150"
+            width="150"
+            color={mode === "dark" ? "#ffff" : "#010e23"}
             ariaLabel="rotating-square-loading"
             wrapperStyle={{}}
             wrapperClass=""

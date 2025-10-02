@@ -33,7 +33,7 @@ export default function MonthYearPicker({ options, value, onChange }) {
       </select>
 
       <select
-        className="rounded-lg border border-gray-300 px-3 py-2"
+        className="rounded-lg border border-gray-300 px-3 py-2 "
         value={month}
         onChange={(e) => onChange({ year, month: Number(e.target.value) })}
       >

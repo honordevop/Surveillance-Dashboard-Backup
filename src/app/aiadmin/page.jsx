@@ -4,7 +4,7 @@ import { useGlobalContext } from "@/context/context";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Watch } from "react-loader-spinner";
+import { RotatingSquare, Watch } from "react-loader-spinner";
 
 export default function AdminPage() {
   const { data: session, status: sessionStatus } = useSession();
@@ -33,17 +33,15 @@ export default function AdminPage() {
 
   if (pageLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center absolute top-0 left-0 -z-40">
+      <div className="w-full h-screen flex items-center justify-center">
         <div>
-          {/* <BounceLoader className="" size={80} color="#b52624" />
-           */}
-          <Watch
+          {/* <BounceLoader className="" size={80} color="#b52624" /> */}
+          <RotatingSquare
             visible={true}
             height="150"
             width="150"
-            radius="75"
-            color="#3B82F6"
-            ariaLabel="watch-loading"
+            color={mode === "dark" ? "#ffff" : "#010e23"}
+            ariaLabel="rotating-square-loading"
             wrapperStyle={{}}
             wrapperClass=""
           />

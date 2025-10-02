@@ -11,7 +11,7 @@ const DarkModeToggle = () => {
     <div className={styles.container} onClick={toggle}>
       <div className=" relative w-4 h-4">
         <Image
-          src="/bluemach_dark_mode_toggle.svg"
+          src="/ngscs_dark_mode_toggle.svg"
           alt="bluemach logo"
           fill={true}
           priority
@@ -19,7 +19,7 @@ const DarkModeToggle = () => {
       </div>
       <div className=" relative w-4 h-4">
         <Image
-          src="/bluemach_dark_mode_toggle.svg"
+          src="/ngscs_dark_mode_toggle.svg"
           alt="bluemach dark mode toggle"
           fill={true}
           priority

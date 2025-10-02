@@ -90,3 +90,11 @@
   z-index: 0 !important;
   /* Or something lower than your nav/chatbot */
 }
+
+
+select option {
+  background-color: #333;
+  /* background for each dropdown option */
+  color: #fff;
+  /* text color of options */
+}
