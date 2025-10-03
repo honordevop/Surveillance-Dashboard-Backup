@@ -18,7 +18,7 @@ const EMPTY_LEAK = { category: "Oil Leakage", location: "", lat: "", lng: "" };
 
 export default function AdminIncidentPage() {
   const { data: session, status: sessionStatus } = useSession();
-  const { pageLoading, offPageLoading } = useGlobalContext();
+  const { pageLoading, offPageLoading, mode } = useGlobalContext();
   const router = useRouter();
 
   console.log(session?.user);
