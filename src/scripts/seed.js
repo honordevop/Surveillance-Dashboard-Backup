@@ -3,7 +3,6 @@ import prisma from "../lib/prisma.js";
 // import prisma from "../lib/prisma";
 import { openai, OPENAI_EMBED_MODEL } from "../lib/openai.js";
 
-
 // const prisma = require("../lib/prisma.js");
 
 async function main() {
@@ -12,14 +11,14 @@ async function main() {
       date: "2025-07-12",
       location: "Water Ferry Front, Zone 6, Ogba/Egbema/Ndoni",
       incidentType: "Illegal Connection",
-      details: "Illegal connection detected and clamped by asset owners."
+      details: "Illegal connection detected and clamped by asset owners.",
     },
     {
       date: "2025-07-13",
       location: "Zone 4 Junction",
       incidentType: "Vandalism",
-      details: "Transformer vandalized overnight; reported to security."
-    }
+      details: "Transformer vandalized overnight; reported to security.",
+    },
   ];
 
   for (const ex of examples) {
@@ -47,10 +46,15 @@ async function main() {
       returning id;
     `;
     await prisma.$queryRawUnsafe(upsertSql, r.id, vectorLiteral);
-    console.log("Seeded report", r.id);
+    // console.log("Seeded report", r.id);
   }
 }
 
 main()
-  .catch((e) => { console.error(e); process.exit(1); })
-  .finally(async () => { await prisma.$disconnect(); });
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

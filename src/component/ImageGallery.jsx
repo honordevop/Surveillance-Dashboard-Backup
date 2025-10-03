@@ -1,11 +1,15 @@
-'use client';
+"use client";
 
 export default function ImageGallery({ images = [] }) {
   return (
     <div className="rounded-xl border p-4">
-      <div className="text-sm text-gray-500 mb-2">Operations Images (Month)</div>
+      <div className="text-sm text-gray-500 mb-2">
+        Operations Images (Month)
+      </div>
       {images.length === 0 ? (
-        <div className="text-sm text-gray-500">No images uploaded for this month.</div>
+        <div className="text-sm text-gray-500">
+          No images uploaded for this month.
+        </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((img) => (
@@ -13,7 +17,7 @@ export default function ImageGallery({ images = [] }) {
               {img.signedUrl ? (
                 <img
                   src={img.signedUrl}
-                  alt={img.caption || 'Operations photo'}
+                  alt={img.caption || "Operations photo"}
                   className="w-full h-40 object-cover"
                   loading="lazy"
                 />
@@ -22,8 +26,8 @@ export default function ImageGallery({ images = [] }) {
                   No preview
                 </div>
               )}
-              <figcaption className="p-2 text-xs text-gray-600 line-clamp-2">
-                {img.caption || '—'}
+              <figcaption className="p-2 text-xs text-grayy-600 line-clamp-2 text-center">
+                {img.caption || "—"}
               </figcaption>
             </figure>
           ))}

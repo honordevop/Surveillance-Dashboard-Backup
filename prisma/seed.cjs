@@ -1,5 +1,5 @@
 // prisma/seed.js
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
@@ -57,15 +57,15 @@ async function main() {
     data: [
       {
         monthId: month.id,
-        category: 'ILLEGAL_CONNECTION',
-        location: 'Water Ferry Front, Zone 6, Ogba/Egbema/Ndoni',
+        category: "ILLEGAL_CONNECTION",
+        location: "Water Ferry Front, Zone 6, Ogba/Egbema/Ndoni",
         lat: 5.286,
         lng: 6.694,
       },
       {
         monthId: month.id,
-        category: 'ILLEGAL_REFINERY',
-        location: 'Abonnema Wharf, Port Harcourt',
+        category: "ILLEGAL_REFINERY",
+        location: "Abonnema Wharf, Port Harcourt",
         lat: 4.751,
         lng: 6.988,
       },
@@ -74,14 +74,27 @@ async function main() {
 
   await prisma.burntAsset.createMany({
     data: [
-      { monthId: month.id, name: 'Pumping Machine', notes: 'Seized during patrol and burnt' },
-      { monthId: month.id, name: 'Surface Storage Tank', notes: 'Destroyed on site' },
+      {
+        monthId: month.id,
+        name: "Pumping Machine",
+        notes: "Seized during patrol and burnt",
+      },
+      {
+        monthId: month.id,
+        name: "Surface Storage Tank",
+        notes: "Destroyed on site",
+      },
     ],
   });
 
-  console.log('Seed complete for August 2025');
+  // console.log('Seed complete for August 2025');
 }
 
 main()
-  .catch((e) => { console.error(e); process.exit(1); })
-  .finally(async () => { await prisma.$disconnect(); });
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

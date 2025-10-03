@@ -21,7 +21,7 @@ export default function AdminIncidentPage() {
   const { pageLoading, offPageLoading, mode } = useGlobalContext();
   const router = useRouter();
 
-  console.log(session?.user);
+  // console.log(session?.user);
 
   // redirect admin users away from signup
 

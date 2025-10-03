@@ -9,10 +9,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const OPERATIONS_BUCKET = process.env.OPERATIONS_IMAGES_BUCKET || "operationImages";
+const OPERATIONS_BUCKET =
+  process.env.OPERATIONS_IMAGES_BUCKET || "operationImages";
 
 export async function POST(req) {
-
   const { searchParams } = new URL(req.url);
 
   // const year = searchParams.get('year');
@@ -24,22 +24,25 @@ export async function POST(req) {
 
   try {
     const form = await req.formData();
-    const year = form.get("year") || searchParams.get('year');
-    const month = form.get("month") || searchParams.get('month');
+    const year = form.get("year") || searchParams.get("year");
+    const month = form.get("month") || searchParams.get("month");
     const captions = form.getAll("captions") || null;
     const files = form.getAll("files");
 
     // console.log("[images POST] year:", year, "month:", month, "files count:", files.length);
     // console.log(form)
-    console.log(captions)
-    console.log(`year: ${year} month: ${month} file available: ${files.length === 0}`)
+    // console.log(captions)
+    // console.log(`year: ${year} month: ${month} file available: ${files.length === 0}`)
 
     if (!year || !month || files.length === 0) {
-      return NextResponse.json({ ok: false, error: "year, month, and files are required" }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "year, month, and files are required" },
+        { status: 400 }
+      );
     }
 
     // ✅ Use your supabase client (don’t duplicate)
-    const supabase = createSupabaseServer(); 
+    const supabase = createSupabaseServer();
 
     // --- Step 1: Ensure Year row exists ---
     const yearRow = await prisma.year.upsert({
@@ -50,7 +53,9 @@ export async function POST(req) {
 
     // --- Step 2: Ensure Month row exists ---
     const monthRow = await prisma.month.upsert({
-      where: { yearId_month: { yearId: yearRow.id, month: parseInt(month, 10) } },
+      where: {
+        yearId_month: { yearId: yearRow.id, month: parseInt(month, 10) },
+      },
       update: {},
       create: { yearId: yearRow.id, month: parseInt(month, 10) },
     });
@@ -62,7 +67,12 @@ export async function POST(req) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const filePath = `${year}/${month}/${Date.now()}-${file.name}`;
 
-      console.log("[images POST] Uploading:", { bucket: OPERATIONS_BUCKET, path: filePath, type: file.type, size: file.size });
+      console.log("[images POST] Uploading:", {
+        bucket: OPERATIONS_BUCKET,
+        path: filePath,
+        type: file.type,
+        size: file.size,
+      });
 
       const { error: uploadError } = await supabase.storage
         .from(OPERATIONS_BUCKET)
@@ -76,7 +86,9 @@ export async function POST(req) {
         throw new Error(`Failed upload: ${uploadError.message}`);
       }
 
-      const { data: urlData } = supabase.storage.from(OPERATIONS_BUCKET).getPublicUrl(filePath);
+      const { data: urlData } = supabase.storage
+        .from(OPERATIONS_BUCKET)
+        .getPublicUrl(filePath);
 
       uploads.push({
         monthId: monthRow.id,
@@ -84,7 +96,7 @@ export async function POST(req) {
         publicUrl: urlData?.publicUrl || null,
         caption: captions[i] || null, // ✅ Protect against index overflow
       });
-      
+
       i++; // ✅ Increment after each upload
     }
 
@@ -94,7 +106,9 @@ export async function POST(req) {
     return NextResponse.json({ ok: true, count: uploads.length });
   } catch (err) {
     console.error("[images POST] Error", err);
-    return NextResponse.json({ ok: false, error: err.message }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: err.message },
+      { status: 500 }
+    );
   }
 }
-

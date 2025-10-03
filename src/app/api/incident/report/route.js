@@ -1,17 +1,20 @@
 // app/api/incident/report/route.js
-import prisma from '@/lib/prisma';
-import { UpsertIncidentSchema } from '@/lib/schemas';
-import { createSupabaseServer, OPERATIONS_BUCKET } from '@/lib/supabase-server';
-import { NextResponse } from 'next/server';
+import prisma from "@/lib/prisma";
+import { UpsertIncidentSchema } from "@/lib/schemas";
+import { createSupabaseServer, OPERATIONS_BUCKET } from "@/lib/supabase-server";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const year = parseInt(searchParams.get('year') || '', 10);
-    const month = parseInt(searchParams.get('month') || '', 10);
+    const year = parseInt(searchParams.get("year") || "", 10);
+    const month = parseInt(searchParams.get("month") || "", 10);
 
     if (!year || !month) {
-      return NextResponse.json({ ok: false, error: 'year and month are required' }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "year and month are required" },
+        { status: 400 }
+      );
     }
 
     const result = await prisma.month.findFirst({
@@ -30,21 +33,30 @@ export async function GET(req) {
       return NextResponse.json({ ok: true, data: null });
     }
 
-      // Build signed URLs for private bucket (1 hour expiry)
+    // Build signed URLs for private bucket (1 hour expiry)
     const supabase = createSupabaseServer();
 
     let operationImages = [];
     if (result.operationImages && result.operationImages.length > 0) {
       const promises = result.operationImages.map(async (img) => {
-        const { data, error } = await supabase
-          .storage
+        const { data, error } = await supabase.storage
           .from(OPERATIONS_BUCKET)
           .createSignedUrl(img.path, 60 * 60);
         if (error) {
-          console.warn('[report GET] Signed URL error:', error.message);
-          return { id: img.id, caption: img.caption || null, path: img.path, signedUrl: null };
+          console.warn("[report GET] Signed URL error:", error.message);
+          return {
+            id: img.id,
+            caption: img.caption || null,
+            path: img.path,
+            signedUrl: null,
+          };
         }
-        return { id: img.id, caption: img.caption || null, path: img.path, signedUrl: data.signedUrl };
+        return {
+          id: img.id,
+          caption: img.caption || null,
+          path: img.path,
+          signedUrl: data.signedUrl,
+        };
       });
       operationImages = await Promise.all(promises);
     }
@@ -61,8 +73,11 @@ export async function GET(req) {
 
     return NextResponse.json({ ok: true, data: payload });
   } catch (e) {
-    console.error('[report GET]', e);
-    return NextResponse.json({ ok: false, error: 'Failed to load report' }, { status: 500 });
+    console.error("[report GET]", e);
+    return NextResponse.json(
+      { ok: false, error: "Failed to load report" },
+      { status: 500 }
+    );
   }
 }
 
@@ -72,10 +87,14 @@ export async function POST(req) {
     // const input = await req.json();
     // console.log(body)
     const parsed = UpsertIncidentSchema.safeParse(body);
-    console.log(parsed)
+    // console.log(parsed)
     if (!parsed.success) {
       return NextResponse.json(
-        { ok: false, error: "Validation failed", details: parsed.error.flatten() },
+        {
+          ok: false,
+          error: "Validation failed",
+          details: parsed.error.flatten(),
+        },
         { status: 400 }
       );
     }
@@ -125,9 +144,15 @@ export async function POST(req) {
 
     if (monthRow) {
       // Existing month → wipe children
-      queries.push(prisma.illegalSite.deleteMany({ where: { monthId: monthRow.id } }));
-      queries.push(prisma.burntAsset.deleteMany({ where: { monthId: monthRow.id } }));
-      queries.push(prisma.leakageSite.deleteMany({ where: { monthId: monthRow.id } }));
+      queries.push(
+        prisma.illegalSite.deleteMany({ where: { monthId: monthRow.id } })
+      );
+      queries.push(
+        prisma.burntAsset.deleteMany({ where: { monthId: monthRow.id } })
+      );
+      queries.push(
+        prisma.leakageSite.deleteMany({ where: { monthId: monthRow.id } })
+      );
     }
 
     if (input.illegalSites?.length) {
@@ -186,4 +211,3 @@ export async function POST(req) {
     );
   }
 }
-

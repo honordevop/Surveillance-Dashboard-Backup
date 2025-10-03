@@ -74,7 +74,7 @@ export default function SignupPage() {
         corridor: form.get("corridor"),
         role: form.get("role"),
       };
-      console.log(payload);
+      // console.log(payload);
 
       const res = await fetch("/api/auth/register", {
         method: "POST",

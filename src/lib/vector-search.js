@@ -30,14 +30,13 @@ export async function queryReports(query, k = 10, threshold = null) {
 
   // Debug distances
   // console.log("Query:", query);
-  rows.forEach(r => {
-    console.log(`Report ${r.id} | Date: ${r.date} | Dist: ${r.distance}`);
-  });
+  // rows.forEach(r => {
+  //   console.log(`Report ${r.id} | Date: ${r.date} | Dist: ${r.distance}`);
+  // });
 
   // 3) If threshold given, filter
   if (threshold !== null) {
-    return rows.filter(r => r.distance <= threshold);
+    return rows.filter((r) => r.distance <= threshold);
   }
   return rows;
 }
-

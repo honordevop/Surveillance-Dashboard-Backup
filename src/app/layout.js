@@ -24,8 +24,13 @@ const space_grotesk = Space_Grotesk({
 });
 
 export const metadata = {
-  title: "Newgaurd Security and Consultancy Services",
-  description: "Western Corridor Pipeline Security and Surveillance Dashboard ",
+  title: "Newgaurd Security and Consultancy Services | Western Corridor",
+  description:
+    "Western Corridor Pipeline Security and Surveillance Dashboard and Incident Management System",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({ children }) {

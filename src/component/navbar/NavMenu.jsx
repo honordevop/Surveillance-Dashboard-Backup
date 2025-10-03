@@ -56,6 +56,26 @@ const NavMenu = ({ toggleMenu }) => {
             </div>
           ))}
           <div className="w-4/5">
+            {session.status === "authenticated" ? (
+              <div
+                className="border-b-[0.5px] border-gray-200 "
+                onClick={toggleMenu}
+              >
+                <Link
+                  href="/home"
+                  className="text-[20px] md:text-[3rem]"
+                  onClick={
+                    pathname.split("/").pop() === "" ? null : onPageLoading
+                  }
+                >
+                  Admin Dashboard
+                </Link>
+              </div>
+            ) : (
+              <div className="hidden"></div>
+            )}
+          </div>
+          <div className="w-4/5">
             {session.status === "unauthenticated" ? (
               <div
                 className="border-b-[0.5px] border-gray-200 "

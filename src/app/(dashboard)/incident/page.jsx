@@ -94,7 +94,7 @@ export default function IncidentDashboardPage() {
     fetchData();
   }, [selected]);
 
-  console.log(data);
+  // console.log(data);
   const report = data?.report || null;
   const hasData = !!report;
 
