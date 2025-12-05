@@ -61,6 +61,7 @@ const ChartPage = () => {
         <StackedBarIncidents />
         <MultiLineIncidents />
         <DonutIncidentClassification />
+        {/* <AreaCumulativeIncidents /> */}
         <ComposedIncidentsVsArrests />
         <AreaCumulativeIncidents />
         <BarCrudeOilVolume />
