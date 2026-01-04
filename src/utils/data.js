@@ -99,6 +99,15 @@ export const data = [
     arrests: 6,
     aversions: 2,
   },
+  {
+    month: "Dec",
+    illegalConnections: 0,
+    illegalRefinery: 3,
+    oilLeaks: 5,
+    gasLeaks: 0,
+    arrests: 10,
+    aversions: 0,
+  },
 ];
 
 // Derived YTD totals for Pie/Donut
@@ -136,6 +145,7 @@ export const crudeOilData = [
   { month: "Sep", crudeOil: 0 },
   { month: "Oct", crudeOil: 2340 },
   { month: "Nov", crudeOil: 6500 },
+  { month: "Dec", crudeOil: 2995 },
 ];
 
 // Arrests vs Aversions (2025 YTD)
@@ -151,6 +161,7 @@ export const arrestsVsAversionsData = [
   { month: "Sep", Arrests: 2, Aversions: 2 },
   { month: "Oct", Arrests: 5, Aversions: 1 },
   { month: "Nov", Arrests: 6, Aversions: 2 },
+  { month: "Nov", Arrests: 10, Aversions: 0 },
 ];
 
 // Trend of Arrests Only (2025 YTD)
@@ -166,4 +177,5 @@ export const arrestsOnlyData = [
   { month: "Sep", Arrests: 2 },
   { month: "Oct", Arrests: 5 },
   { month: "Nov", Arrests: 6 },
+  { month: "Dec", Arrests: 10 },
 ];
