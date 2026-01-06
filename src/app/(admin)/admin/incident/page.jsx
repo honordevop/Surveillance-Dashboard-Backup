@@ -318,7 +318,7 @@ export default function AdminIncidentPage() {
             {[
               ["illegalConnections", "Illegal Connections"],
               ["illegalRefineries", "Illegal Refineries"],
-              ["oilLeaks", "Oil Leaks"],
+              ["oilLeaks", "Crude Oil Leaks"],
               ["gasLeaks", "Gas Leaks"],
               ["arrestsMade", "Arrests Made"],
               ["aversions", "Aversions"],

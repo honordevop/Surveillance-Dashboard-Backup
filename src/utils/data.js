@@ -2,8 +2,8 @@
 export const data = [
   {
     month: "Jan",
-    illegalConnections: 3,
-    illegalRefinery: 1,
+    illegalConnections: 5,
+    illegalRefinery: 0,
     oilLeaks: 0,
     gasLeaks: 0,
     arrests: 3,
@@ -20,9 +20,9 @@ export const data = [
   },
   {
     month: "Mar",
-    illegalConnections: 3,
-    illegalRefinery: 8,
-    oilLeaks: 0,
+    illegalConnections: 5,
+    illegalRefinery: 4,
+    oilLeaks: 1,
     gasLeaks: 1,
     arrests: 4,
     aversions: 2,
@@ -31,14 +31,14 @@ export const data = [
     month: "Apr",
     illegalConnections: 3,
     illegalRefinery: 0,
-    oilLeaks: 0,
+    oilLeaks: 1,
     gasLeaks: 0,
     arrests: 12,
     aversions: 8,
   },
   {
     month: "May",
-    illegalConnections: 0,
+    illegalConnections: 1,
     illegalRefinery: 4,
     oilLeaks: 2,
     gasLeaks: 4,
@@ -48,7 +48,7 @@ export const data = [
   {
     month: "Jun",
     illegalConnections: 1,
-    illegalRefinery: 5,
+    illegalRefinery: 4,
     oilLeaks: 2,
     gasLeaks: 0,
     arrests: 8,
@@ -84,7 +84,7 @@ export const data = [
   {
     month: "Oct",
     illegalConnections: 0,
-    illegalRefinery: 6,
+    illegalRefinery: 5,
     oilLeaks: 6,
     gasLeaks: 0,
     arrests: 5,
@@ -114,7 +114,7 @@ export const data = [
 /*export const incidentTotals = [
   { name: "Illegal Connections", value: 29 },
   { name: "Illegal Refinery", value: 25 },
-  { name: "Oil Leaks", value: 13 },
+  { name: "Crude Oil Leaks", value: 13 },
   { name: "Gas Leaks", value: 8 },
 ];*/
 
@@ -128,7 +128,10 @@ export const incidentTotals = [
     name: "Illegal Refineries",
     value: data.reduce((sum, d) => sum + d.illegalRefinery, 0),
   },
-  { name: "Oil Leaks", value: data.reduce((sum, d) => sum + d.oilLeaks, 0) },
+  {
+    name: "Crude Oil Leaks",
+    value: data.reduce((sum, d) => sum + d.oilLeaks, 0),
+  },
   { name: "Gas Leaks", value: data.reduce((sum, d) => sum + d.gasLeaks, 0) },
 ];
 
@@ -161,7 +164,7 @@ export const arrestsVsAversionsData = [
   { month: "Sep", Arrests: 2, Aversions: 2 },
   { month: "Oct", Arrests: 5, Aversions: 1 },
   { month: "Nov", Arrests: 6, Aversions: 2 },
-  { month: "Nov", Arrests: 10, Aversions: 0 },
+  { month: "Dec", Arrests: 10, Aversions: 0 },
 ];
 
 // Trend of Arrests Only (2025 YTD)

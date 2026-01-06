@@ -41,7 +41,7 @@ export default function MultiLineIncidents() {
             type="monotone"
             dataKey="oilLeaks"
             stroke="#3b82f6"
-            name="Oil Leaks"
+            name="Crude Oil Leaks"
           />
           <Line
             type="monotone"

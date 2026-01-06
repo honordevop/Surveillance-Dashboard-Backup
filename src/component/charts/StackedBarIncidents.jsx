@@ -37,7 +37,12 @@ export default function StackedBarIncidents() {
             fill="#f59e0b"
             name="Illegal Refinery"
           />
-          <Bar dataKey="oilLeaks" stackId="a" fill="#3b82f6" name="Oil Leaks" />
+          <Bar
+            dataKey="oilLeaks"
+            stackId="a"
+            fill="#3b82f6"
+            name="Crude Oil Leaks"
+          />
           <Bar dataKey="gasLeaks" stackId="a" fill="#10b981" name="Gas Leaks" />
         </BarChart>
       </ResponsiveContainer>

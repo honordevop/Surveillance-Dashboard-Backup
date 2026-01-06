@@ -94,7 +94,7 @@ export default function IncidentDashboardPage() {
     fetchData();
   }, [selected]);
 
-  // console.log(data);
+  // console.log(data?.illegalSites);
   const report = data?.report || null;
   const hasData = !!report;
 
@@ -133,6 +133,8 @@ export default function IncidentDashboardPage() {
       </div>
     );
   }
+
+  // console.log(data.illegalsite);
 
   return (
     <div className="h-[92vh] md:h-[86vh] mt-[8vh] md:mt-[14vh] overflow-y-scroll">
@@ -176,7 +178,7 @@ export default function IncidentDashboardPage() {
                 title="Illegal Refineries"
                 value={fmt(report.illegalRefineries)}
               />
-              <KpiCard title="Oil Leaks" value={fmt(report.oilLeaks)} />
+              <KpiCard title="Crude Oil Leaks" value={fmt(report.oilLeaks)} />
               <KpiCard title="Gas Leaks" value={fmt(report.gasLeaks)} />
               <KpiCard title="Arrests Made" value={fmt(report.arrestsMade)} />
               <KpiCard title="Aversions" value={fmt(report.aversions)} />

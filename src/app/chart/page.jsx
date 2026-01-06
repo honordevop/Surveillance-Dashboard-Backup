@@ -1,6 +1,6 @@
 "use client"; // important if you’re in Next.js 13+ App Router
 
-import React, { useEffect } from "react"; // ensure this is present
+import React, { useEffect, useState } from "react"; // ensure this is present
 import AreaCumulativeIncidents from "@/component/charts/AreaCumulativeIncidents";
 import ComposedIncidentsVsArrests from "@/component/charts/ComposedIncidentsVsArrests";
 import DonutIncidentClassification from "@/component/charts/DonutIncidentClassification";
@@ -18,9 +18,18 @@ import { usePathname } from "next/navigation";
 import { useGlobalContext } from "@/context/context";
 import { BounceLoader } from "react-spinners";
 import { RotatingSquare } from "react-loader-spinner";
+// import IncidentMap from "@/component/IncidentMap";
+import dynamic from "next/dynamic";
+
+// Dynamically load the IncidentMap so it only runs in browser
+const IncidentMap = dynamic(() => import("@/component/IncidentMap"), {
+  ssr: false,
+});
 
 const ChartPage = () => {
   const { currentPage, pageLoading, mode, offPageLoading } = useGlobalContext();
+  const [illegalSites, setillegalSites] = useState([]);
+  const [leakageSites, setleakageSites] = useState([]);
 
   // console.log(currentPage);
   useEffect(() => {
@@ -30,6 +39,32 @@ const ChartPage = () => {
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/incident/illegalsites");
+      const json = await res.json();
+      if (json.ok) {
+        if (json.data && json.data.length > 0) {
+          setillegalSites(json.data); // latest
+        }
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/incident/leakagesites");
+      const json = await res.json();
+      if (json.ok) {
+        if (json.data && json.data.length > 0) {
+          setleakageSites(json.data); // latest
+        }
+      }
+    })();
+  }, []);
+
+  // console.log(illegalSites);
 
   if (pageLoading) {
     return (
@@ -65,6 +100,19 @@ const ChartPage = () => {
         <ComposedIncidentsVsArrests />
         <AreaCumulativeIncidents />
         <BarCrudeOilVolume />
+      </div>
+
+      {/* Map */}
+      <div className="my-4 bg-whitee shadow rounded-2xl p-4 mb-4">
+        <h2 className="text-lg font-semibold mb-2 mt-4">
+          Incident Map Showing Location Coordinate of Incidents (YTD)
+        </h2>
+        <IncidentMap
+          illegalSites={illegalSites || []}
+          leakageSites={leakageSites || []}
+        />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AreaCumulativeOil />
         <AreaArrestsVsAversions /> {/* New Chart */}
         {/* <ArrestOnlyLineChart />
